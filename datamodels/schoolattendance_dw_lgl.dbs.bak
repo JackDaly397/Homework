@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<project name="nycattendance_dw_lgl" id="LogicalDesign-9bd" database="LogicalDesign" >
+	<schema name="INSTANCE" catalogname="nycattendance_dw_lgl" >
+		<table name="dim_demographic" prior="Entity" >
+			<column name="demographic_id" type="BIGINT" jt="-5" mandatory="y" />
+			<column name="demographic_variable" type="VARCHAR" length="255" jt="12" />
+			<column name="demographic_category" type="VARCHAR" length="255" jt="12" />
+			<index name="pk_dim_demographic" unique="PRIMARY_KEY" >
+				<column name="demographic_id" />
+			</index>
+		</table>
+		<table name="dim_school" prior="Entity" >
+			<column name="dbn" type="DECIMAL" jt="3" mandatory="y" />
+			<column name="school_name" type="VARCHAR" length="255" jt="12" />
+			<index name="pk_dim_school" unique="PRIMARY_KEY" >
+				<column name="dbn" />
+			</index>
+		</table>
+		<table name="dim_time" prior="Entity" >
+			<column name="year" type="DATETIME" jt="93" />
+			<column name="time_id" type="BIGINT" jt="-5" mandatory="y" />
+			<column name="grade" type="VARCHAR" length="255" jt="12" />
+			<index name="pk_dim_time" unique="PRIMARY_KEY" >
+				<column name="time_id" />
+			</index>
+		</table>
+		<table name="facts_attendance" prior="Entity" >
+			<column name="attendanceid" type="BIGINT" jt="-5" mandatory="y" />
+			<column name="total_days" type="INT" jt="4" mandatory="y" />
+			<column name="days_absent" type="INT" jt="4" mandatory="y" />
+			<column name="days_present" prior="dats_present" type="INT" jt="4" mandatory="y" />
+			<column name="attendance_percent" type="DECIMAL" length="1" decimal="2" jt="3" mandatory="y" />
+			<column name="chronically_absent" type="INT" jt="4" mandatory="y" />
+			<column name="chronic_absent_percentage" type="DECIMAL" length="1" decimal="2" jt="3" mandatory="y" />
+			<column name="demographic_id" type="BIGINT" jt="-5" mandatory="y" />
+			<column name="time_id" type="BIGINT" jt="-5" mandatory="y" />
+			<column name="dbn" type="DECIMAL" jt="3" mandatory="y" />
+			<index name="pk_facts_attendance" unique="PRIMARY_KEY" >
+				<column name="attendanceid" />
+			</index>
+			<index name="unq_demographic_id" unique="UNIQUE_INDEX" >
+				<column name="demographic_id" />
+			</index>
+			<index name="unq_time_id" unique="UNIQUE_INDEX" >
+				<column name="time_id" />
+			</index>
+			<index name="unq_dbn" unique="UNIQUE_INDEX" >
+				<column name="dbn" />
+			</index>
+			<fk name="fk_facts_attendance_dim_school" virtual="y" to_schema="nycattendance_dw_lgl.INSTANCE" to_table="dim_school" type="Identifying" mandatory="y" cardinality="ZeroMore" range_from="0" range_to="0" >
+				<fk_column name="total_days" pk="dbn" />
+			</fk>
+			<fk name="fk_facts_attendance_dim_school_0" virtual="y" to_schema="nycattendance_dw_lgl.INSTANCE" to_table="dim_school" type="Identifying" mandatory="y" cardinality="ZeroMore" range_from="0" range_to="0" >
+				<fk_column name="days_absent" pk="dbn" />
+			</fk>
+			<fk name="fk_facts_attendance_dim_school_1" virtual="y" to_schema="nycattendance_dw_lgl.INSTANCE" to_table="dim_school" type="Identifying" mandatory="y" cardinality="ZeroMore" range_from="0" range_to="0" >
+				<fk_column name="days_present" pk="dbn" />
+			</fk>
+			<fk name="fk_facts_attendance_dim_school_2" virtual="y" to_schema="nycattendance_dw_lgl.INSTANCE" to_table="dim_school" type="Identifying" mandatory="y" cardinality="ZeroMore" range_from="0" range_to="0" >
+				<fk_column name="attendance_percent" pk="dbn" />
+			</fk>
+			<fk name="fk_facts_attendance_dim_school_3" virtual="y" to_schema="nycattendance_dw_lgl.INSTANCE" to_table="dim_school" type="Identifying" mandatory="y" cardinality="ZeroMore" range_from="0" range_to="0" >
+				<fk_column name="chronically_absent" pk="dbn" />
+			</fk>
+			<fk name="fk_facts_attendance_dim_school_4" virtual="y" to_schema="nycattendance_dw_lgl.INSTANCE" to_table="dim_school" type="Identifying" mandatory="y" cardinality="ZeroMore" range_from="0" range_to="0" >
+				<fk_column name="chronic_absent_percentage" pk="dbn" />
+			</fk>
+			<fk name="fk_facts_attendance_dim_demographic_3" virtual="y" to_schema="nycattendance_dw_lgl.INSTANCE" to_table="dim_demographic" type="Identifying" mandatory="y" cardinality="ZeroMore" range_from="0" range_to="0" >
+				<fk_column name="chronically_absent" pk="demographic_id" />
+			</fk>
+			<fk name="fk_facts_attendance_dim_time" virtual="y" to_schema="nycattendance_dw_lgl.INSTANCE" to_table="dim_time" type="NonIdentifying" mandatory="y" cardinality="ZeroMore" range_from="0" range_to="0" >
+				<fk_column name="total_days" pk="time_id" />
+			</fk>
+			<fk name="fk_facts_attendance_dim_time_0" virtual="y" to_schema="nycattendance_dw_lgl.INSTANCE" to_table="dim_time" type="NonIdentifying" mandatory="y" cardinality="ZeroMore" range_from="0" range_to="0" >
+				<fk_column name="days_absent" pk="time_id" />
+			</fk>
+			<fk name="fk_facts_attendance_dim_time_1" virtual="y" to_schema="nycattendance_dw_lgl.INSTANCE" to_table="dim_time" type="NonIdentifying" mandatory="y" cardinality="ZeroMore" range_from="0" range_to="0" >
+				<fk_column name="days_present" pk="time_id" />
+			</fk>
+			<fk name="fk_facts_attendance_dim_time_2" virtual="y" to_schema="nycattendance_dw_lgl.INSTANCE" to_table="dim_time" type="NonIdentifying" mandatory="y" cardinality="ZeroMore" range_from="0" range_to="0" >
+				<fk_column name="attendance_percent" pk="time_id" />
+			</fk>
+			<fk name="fk_facts_attendance_dim_time_3" virtual="y" to_schema="nycattendance_dw_lgl.INSTANCE" to_table="dim_time" type="NonIdentifying" mandatory="y" cardinality="ZeroMore" range_from="0" range_to="0" >
+				<fk_column name="chronically_absent" pk="time_id" />
+			</fk>
+			<fk name="fk_facts_attendance_dim_time_4" virtual="y" to_schema="nycattendance_dw_lgl.INSTANCE" to_table="dim_time" type="NonIdentifying" mandatory="y" cardinality="ZeroMore" range_from="0" range_to="0" >
+				<fk_column name="chronic_absent_percentage" pk="time_id" />
+			</fk>
+			<fk name="fk_facts_attendance_dim_demographic" virtual="y" to_schema="nycattendance_dw_lgl.INSTANCE" to_table="dim_demographic" type="Identifying" mandatory="y" cardinality="ZeroMore" range_from="0" range_to="0" >
+				<fk_column name="total_days" pk="demographic_id" />
+			</fk>
+			<fk name="fk_facts_attendance_dim_demographic_0" virtual="y" to_schema="nycattendance_dw_lgl.INSTANCE" to_table="dim_demographic" type="NonIdentifying" mandatory="y" cardinality="ZeroMore" range_from="0" range_to="0" >
+				<fk_column name="days_absent" pk="demographic_id" />
+			</fk>
+			<fk name="fk_facts_attendance_dim_demographic_1" virtual="y" to_schema="nycattendance_dw_lgl.INSTANCE" to_table="dim_demographic" type="NonIdentifying" mandatory="y" cardinality="ZeroMore" range_from="0" range_to="0" >
+				<fk_column name="days_present" pk="demographic_id" />
+			</fk>
+			<fk name="fk_facts_attendance_dim_demographic_2" virtual="y" to_schema="nycattendance_dw_lgl.INSTANCE" to_table="dim_demographic" type="NonIdentifying" mandatory="y" cardinality="ZeroMore" range_from="0" range_to="0" >
+				<fk_column name="attendance_percent" pk="demographic_id" />
+			</fk>
+			<fk name="fk_facts_attendance_dim_demographic_4" virtual="y" to_schema="nycattendance_dw_lgl.INSTANCE" to_table="dim_demographic" type="NonIdentifying" mandatory="y" cardinality="ZeroMore" range_from="0" range_to="0" >
+				<fk_column name="chronically_absent" pk="demographic_id" />
+			</fk>
+			<fk name="fk_facts_attendance_dim_demographic_5" virtual="y" to_schema="nycattendance_dw_lgl.INSTANCE" to_table="dim_demographic" type="NonIdentifying" mandatory="y" cardinality="ZeroMore" range_from="0" range_to="0" >
+				<fk_column name="chronic_absent_percentage" pk="demographic_id" />
+			</fk>
+		</table>
+	</schema>
+	<layout name="Default Layout" id="Layout-d4e" show_relation="columns" >
+		<entity schema="nycattendance_dw_lgl.INSTANCE" name="dim_demographic" color="C1D8EE" x="48" y="304" />
+		<entity schema="nycattendance_dw_lgl.INSTANCE" name="dim_school" color="C1D8EE" x="992" y="256" />
+		<entity schema="nycattendance_dw_lgl.INSTANCE" name="dim_time" color="C1D8EE" x="576" y="496" />
+		<entity schema="nycattendance_dw_lgl.INSTANCE" name="facts_attendance" color="C1D8EE" x="480" y="256" />
+		<callout x="64" y="48" pointer="Round" >
+			<comment><![CDATA[This is a layout - a diagram with tools.
+- Create new entities by right-clicking the layout. 
+- Double-click entity headers to edit.
+- For a better understanding of the schema, create multiple layouts.
+- Deploy the model into the database by converting it first to the physical design.]]></comment>
+		</callout>
+	</layout>
+</project>
