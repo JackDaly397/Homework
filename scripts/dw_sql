@@ -1,0 +1,41 @@
+CREATE SCHEMA IF NOT EXISTS "nycattendance";
+
+CREATE  TABLE "nycattendance".dim_demographic ( 
+	demographic_id       BIGINT  NOT NULL  ,
+	demographic_variable VARCHAR(255)    ,
+	demographic_category VARCHAR(255)    ,
+	CONSTRAINT pk_dim_demographic PRIMARY KEY ( demographic_id )
+ );
+
+CREATE  TABLE "nycattendance".dim_school ( 
+	dbn                  DECIMAL  NOT NULL  ,
+	school_name          VARCHAR(255)    ,
+	CONSTRAINT pk_dim_school PRIMARY KEY ( dbn )
+ );
+
+CREATE  TABLE "nycattendance".dim_time ( 
+	"year"               DATE    ,
+	time_id              BIGINT  NOT NULL  ,
+	grade                VARCHAR(255)    ,
+	CONSTRAINT pk_dim_time PRIMARY KEY ( time_id )
+ );
+
+CREATE  TABLE "nycattendance".facts_attendance ( 
+	attendanceid         BIGINT  NOT NULL  ,
+	total_days           INT  NOT NULL  ,
+	days_absent          INT  NOT NULL  ,
+	days_present         INT  NOT NULL  ,
+	attendance_percent   DECIMAL(1,2)  NOT NULL  ,
+	chronically_absent   INT    ,
+	chronic_absent_percentage DECIMAL(1,2)  NOT NULL  ,
+	demographic_id       BIGINT  NOT NULL  ,
+	time_id              BIGINT  NOT NULL  ,
+	dbn                  DECIMAL  NOT NULL  ,
+	CONSTRAINT pk_facts_attendance PRIMARY KEY ( attendanceid )
+ );
+
+CREATE UNIQUE INDEX unq_demographic_id ON "nycattendance".facts_attendance ( demographic_id );
+
+CREATE UNIQUE INDEX unq_time_id ON "nycattendance".facts_attendance ( time_id );
+
+CREATE UNIQUE INDEX unq_dbn ON "nycattendance".facts_attendance ( dbn );
