@@ -14,7 +14,7 @@ CREATE  TABLE "nycattendance".dim_school (
  );
 
 CREATE  TABLE "nycattendance".dim_time ( 
-	"year"               DATE    ,
+	year_number               DATE    ,
 	time_id              BIGINT  NOT NULL  ,
 	grade                VARCHAR(255)    ,
 	CONSTRAINT pk_dim_time PRIMARY KEY ( time_id )
