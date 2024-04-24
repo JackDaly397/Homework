@@ -1,10 +1,21 @@
 CREATE SCHEMA IF NOT EXISTS "nycattendance";
 
-CREATE  TABLE "nycattendance".dim_demographic ( 
-	demographic_id       BIGINT  NOT NULL  ,
-	demographic_variable VARCHAR(255)    ,
+CREATE  TABLE "nycattendance".dim_demographic_category ( 
+	demographic_category_id BIGINT  NOT NULL  ,
 	demographic_category VARCHAR(255)    ,
-	CONSTRAINT pk_dim_demographic PRIMARY KEY ( demographic_id )
+	CONSTRAINT pk_dim_demographic PRIMARY KEY ( demographic_category_id )
+ );
+
+CREATE  TABLE "nycattendance".dim_demographic_variable ( 
+	demographic_variable_id BIGINT  NOT NULL  ,
+	demographic_variable VARCHAR(255)    ,
+	CONSTRAINT pk_dim_demographic_variable PRIMARY KEY ( demographic_variable_id )
+ );
+
+CREATE  TABLE "nycattendance".dim_grade ( 
+	grade_id             BIGINT  NOT NULL  ,
+	grade                VARCHAR(255)    ,
+	CONSTRAINT pk_dim_grade PRIMARY KEY ( grade_id )
  );
 
 CREATE  TABLE "nycattendance".dim_school ( 
@@ -14,9 +25,8 @@ CREATE  TABLE "nycattendance".dim_school (
  );
 
 CREATE  TABLE "nycattendance".dim_time ( 
-	year_number               DATE    ,
+	year_number          DATETIME    ,
 	time_id              BIGINT  NOT NULL  ,
-	grade                VARCHAR(255)    ,
 	CONSTRAINT pk_dim_time PRIMARY KEY ( time_id )
  );
 
@@ -28,13 +38,16 @@ CREATE  TABLE "nycattendance".facts_attendance (
 	attendance_percent   DECIMAL(1,3)  NOT NULL  ,
 	chronically_absent   INT    ,
 	chronic_absent_percentage DECIMAL(1,3)  NOT NULL  ,
-	demographic_id       BIGINT  NOT NULL  ,
+	demographic_category_id BIGINT  NOT NULL  ,
 	time_id              BIGINT  NOT NULL  ,
 	dbn                  DECIMAL  NOT NULL  ,
-	CONSTRAINT pk_facts_attendance PRIMARY KEY ( attendanceid )
+	grade_id             BIGINT  NOT NULL  ,
+	demographic_variable_id BIGINT  NOT NULL  ,
+	CONSTRAINT pk_facts_attendance UNIQUE ( attendanceid, grade_id ) ,
+	CONSTRAINT pk UNIQUE ( demographic_variable_id ) 
  );
 
-CREATE UNIQUE INDEX unq_demographic_id ON "nycattendance".facts_attendance ( demographic_id );
+CREATE UNIQUE INDEX unq_demographic_id ON "nycattendance".facts_attendance ( demographic_category_id );
 
 CREATE UNIQUE INDEX unq_time_id ON "nycattendance".facts_attendance ( time_id );
 
