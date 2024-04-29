@@ -17,7 +17,7 @@
 			</index>
 		</table>
 		<table name="dim_time" prior="Entity" >
-			<column name="year" type="DATETIME" jt="93" />
+			<column name="year" type="VARCHAR" length="255" jt="12" />
 			<column name="time_id" type="BIGINT" jt="-5" mandatory="y" />
 			<column name="grade" type="VARCHAR" length="255" jt="12" />
 			<index name="pk_dim_time" unique="PRIMARY_KEY" >
