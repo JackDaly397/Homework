@@ -1,54 +1,67 @@
 CREATE SCHEMA IF NOT EXISTS "nycattendance";
 
-CREATE  TABLE "nycattendance".dim_demographic_category ( 
+CREATE  TABLE "nycattendance".dim_demographic_category (
 	demographic_category_id BIGINT  NOT NULL  ,
 	demographic_category VARCHAR(255)    ,
 	CONSTRAINT pk_dim_demographic PRIMARY KEY ( demographic_category_id )
  );
 
-CREATE  TABLE "nycattendance".dim_demographic_variable ( 
+CREATE  TABLE "nycattendance".dim_demographic_variable (
 	demographic_variable_id BIGINT  NOT NULL  ,
 	demographic_variable VARCHAR(255)    ,
 	CONSTRAINT pk_dim_demographic_variable PRIMARY KEY ( demographic_variable_id )
  );
 
-CREATE  TABLE "nycattendance".dim_grade ( 
+CREATE  TABLE "nycattendance".dim_grade (
 	grade_id             BIGINT  NOT NULL  ,
 	grade                VARCHAR(255)    ,
 	CONSTRAINT pk_dim_grade PRIMARY KEY ( grade_id )
  );
 
-CREATE  TABLE "nycattendance".dim_school ( 
-	dbn                  DECIMAL  NOT NULL  ,
+CREATE  TABLE "nycattendance".dim_school (
+	dbn                  VARCHAR(255)  NOT NULL  ,
 	school_name          VARCHAR(255)    ,
 	CONSTRAINT pk_dim_school PRIMARY KEY ( dbn )
  );
 
-CREATE  TABLE "nycattendance".dim_time ( 
-	year_number          DATETIME    ,
+CREATE  TABLE "nycattendance".dim_time (
+	year_number          DATE    ,
 	time_id              BIGINT  NOT NULL  ,
 	CONSTRAINT pk_dim_time PRIMARY KEY ( time_id )
  );
 
-CREATE  TABLE "nycattendance".facts_attendance ( 
-	attendanceid         BIGINT  NOT NULL  ,
+CREATE  TABLE "nycattendance".facts_attendance (
+	attendance_id         BIGINT  NOT NULL  ,
 	total_days           INT  NOT NULL  ,
 	days_absent          INT  NOT NULL  ,
 	days_present         INT  NOT NULL  ,
-	attendance_percent   DECIMAL(1,3)  NOT NULL  ,
+	attendance_percentage   DECIMAL(5,3)  NOT NULL  ,
 	chronically_absent   INT    ,
-	chronic_absent_percentage DECIMAL(1,3)  NOT NULL  ,
+	chronic_absent_percentage DECIMAL(5,3)  NOT NULL  ,
 	demographic_category_id BIGINT  NOT NULL  ,
 	time_id              BIGINT  NOT NULL  ,
 	dbn                  DECIMAL  NOT NULL  ,
 	grade_id             BIGINT  NOT NULL  ,
 	demographic_variable_id BIGINT  NOT NULL  ,
-	CONSTRAINT pk_facts_attendance UNIQUE ( attendanceid, grade_id ) ,
-	CONSTRAINT pk UNIQUE ( demographic_variable_id ) 
+	CONSTRAINT pk_facts_attendance UNIQUE ( attendance_id ) ,
  );
 
-CREATE UNIQUE INDEX unq_demographic_id ON "nycattendance".facts_attendance ( demographic_category_id );
+ALTER TABLE "nycattendance".facts_attendance
+    ADD CONSTRAINT fk_demographic_variable_id
+        FOREIGN KEY (demographic_variable_id) REFERENCES dim_demographic_variable;
 
-CREATE UNIQUE INDEX unq_time_id ON "nycattendance".facts_attendance ( time_id );
+ALTER TABLE "nycattendance".facts_attendance
+    ADD CONSTRAINT fk_demographic_category_id
+        FOREIGN KEY (demographic_category_id) REFERENCES dim_demographic_category;
 
-CREATE UNIQUE INDEX unq_dbn ON "nycattendance".facts_attendance ( dbn );
+ALTER TABLE "nycattendance".facts_attendance
+    ADD CONSTRAINT fk_grade_id
+        FOREIGN KEY (grade_id) REFERENCES dim_grade;
+
+ALTER TABLE "nycattendance".facts_attendance
+    ADD CONSTRAINT fk_dbn
+        FOREIGN KEY (dbn) REFERENCES dim_school;
+
+ALTER TABLE "nycattendance".facts_attendance
+    ADD CONSTRAINT fk_time
+        FOREIGN KEY (time_id) REFERENCES dim_time;
