@@ -1,0 +1,68 @@
+create table dim_school
+(
+	dbn varchar(255) not null
+		constraint pk_dim_school
+			primary key,
+	school_name varchar(255)
+);
+
+create table dim_demographic_variable
+(
+	demographic_variable_id bigint not null
+		constraint pk_dim_demographic_variable
+			primary key,
+	demographic_variable varchar(255)
+);
+
+create table dim_grade
+(
+	grade_id bigint not null
+		constraint pk_dim_grade
+			primary key,
+	grade varchar(255)
+);
+
+create table dim_demographic_category
+(
+	demographic_category_id bigint not null
+		constraint pk_dim_demographic
+			primary key,
+	demographic_category varchar(255)
+);
+
+create table dim_time
+(
+	year_number varchar(50),
+	time_id bigint not null
+		constraint pk_dim_time
+			primary key
+);
+
+create table facts_attendance
+(
+	attendance_id bigint not null
+		constraint pk_facts_attendance
+			primary key,
+	total_days integer not null,
+	days_absent integer not null,
+	days_present integer not null,
+	attendance_percentage numeric(5,3) not null,
+	chronically_absent integer,
+	chronic_absent_percentage numeric(5,3) not null,
+	demographic_category_id bigint not null
+		constraint fk_demographic_category_id
+			references dim_demographic_category,
+	time_id bigint not null
+		constraint fk_time
+			references dim_time,
+	dbn varchar(255) not null
+		constraint fk_dbn
+			references dim_school,
+	grade_id bigint not null
+		constraint fk_grade_id
+			references dim_grade,
+	demographic_variable_id bigint not null
+		constraint fk_demographic_variable_id
+			references dim_demographic_variable
+);
+
