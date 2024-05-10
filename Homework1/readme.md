@@ -13,8 +13,7 @@ https://data.cityofnewyork.us/api/views/vww9-qguh/files/c638864d-7cbd-449c-9920-
 The data used in this pipeline is provided by NYC Open Data. It contains attendance results for students in public schools, charter schools, and home schooling across NYC. The data is broken down into multiple demographic variables and provides important information on the attendance records of New York's next generation.
 
 ## Extraction and Storage
-### Storage of Choice
-Azure Blob Container
+### Storage of Choice: Azure Blob Container
 
 To extract the data from NYC Open Data, I had to use Socrata to connect to the API and pull in the data through chunks. Once this data was pulled into my Jupyter Notebook, I was able to upload it into my blob container in Azure.
 
